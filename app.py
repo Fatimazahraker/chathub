@@ -1,35 +1,31 @@
 import secrets
 import os
-import time
-from flask import Flask, render_template, request, redirect, url_for, flash
-
-
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 from wtform_fields import *
 from models import *
-
 
 db_username = os.environ.get('DB_USERNAME', 'default_username')
 db_password = os.environ.get('DB_PASSWORD', 'default_password')
 db_name = os.environ.get('DB_NAME', 'default_database')
 
-
 app = Flask(__name__)
-app.secret_key=app.config['SECRET_KEY'] = secrets.token_hex(32)
-app.config['SQLALCHEMY_DATABASE_URI']=f'postgresql://{db_username}:{db_password}@localhost:5000/{db_name}'
+app.secret_key = secrets.token_hex(32)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_username}:{db_password}@localhost/{db_name}'
 db = SQLAlchemy(app)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-
     reg_form = RegistrationForm()
-    # Update database if validation success
+
     if reg_form.validate_on_submit():
         username = reg_form.username.data
         password = reg_form.password.data
 
-        user = User(username=username, password=pasword)
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
+
         return redirect(url_for('index'))
 
     return render_template("index.html", form=reg_form)
