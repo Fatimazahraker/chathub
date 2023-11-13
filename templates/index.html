@@ -1,0 +1,21 @@
+
+{% from 'field-macro.html' import displayField %}
+{% extends "prelogin-layout.html" %}
+
+{% block title %}Register {% endblock %}
+
+{% block content %}
+        <h2>get started!</h2>
+
+	<form action="{{ url_for('index') }}", method="POST">
+	    {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
+	    {{ displayField(form.password, 'Password') }}
+	    {{ displayField(firm_pswd, 'Retype Password') }}
+
+	    <div>
+		    {{ form.submit_button }}
+	    </div>
+
+	    {{form.csrf_token }}
+	</form>
+{% endblock %}
